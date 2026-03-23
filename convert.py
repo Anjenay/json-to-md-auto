@@ -15,7 +15,6 @@ def json_to_md(data, level=1):
     return md
 
 def text_to_md(content):
-    """Fallback: convert plain text → markdown bullets"""
     lines = content.splitlines()
     md = ""
     for line in lines:
@@ -31,18 +30,13 @@ for file in Path(".").rglob("*"):
             with open(file, "r", encoding="utf-8") as f:
                 content = f.read()
 
-            # Skip already Markdown (optional)
-            if content.strip().startswith("#"):
-                print(f"Skipped (already MD): {file}")
-                continue
+            # ❌ REMOVED SKIP LOGIC
 
-            # Try JSON conversion
             try:
                 data = json.loads(content)
                 md = json_to_md(data)
                 print(f"JSON Converted: {file}")
             except:
-                # Fallback to text → MD
                 md = text_to_md(content)
                 print(f"Text Converted: {file}")
 
