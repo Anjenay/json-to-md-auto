@@ -7,37 +7,33 @@ on:
       - '**.json'
   workflow_dispatch:
 
+permissions:
+  contents: write   # ✅ THIS IS THE FIX
+
 jobs:
   convert:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      # 3️⃣ Install dependencies
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
-      # 4️⃣ Run conversion script
       - name: Run JSON to MD conversion
-        run: |
-          python convert.py
+        run: python convert.py
 
-      # 5️⃣ Commit changes (IMPORTANT)
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          
+
           git add .
           git diff --cached --quiet || git commit -m "Auto convert JSON to MD"
           git push
